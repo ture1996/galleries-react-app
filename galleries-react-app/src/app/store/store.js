@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from "./reducers";
 import createSagaMiddleware from "redux-saga";
-import gallerySaga from "../galleries/sagas";
+import rootSaga from "./sagas";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -11,4 +11,4 @@ export const Store = configureStore({
     getDefaultMiddleware().concat(sagaMiddleware),
 });
 
-sagaMiddleware.run(gallerySaga);
+sagaMiddleware.run(rootSaga);

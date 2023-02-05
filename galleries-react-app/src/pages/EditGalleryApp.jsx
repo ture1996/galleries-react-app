@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { CreateGalleryForm } from "../components/CreateGalleryForm";
 import { galleryService } from "../services/GalleryService";
 
-export const CreateGallery = () => {
+export const EditGallery = () => {
+  const { id } = useParams();
+  const userId = window.localStorage.getItem("user");
   const [gallery, setGallery] = useState({
     name: "",
     description: "",
@@ -10,8 +13,18 @@ export const CreateGallery = () => {
   });
 
   useEffect(() => {
-    console.log(gallery);
-  }, [gallery]);
+    if (id && !gallery.id) {
+      handleGetGallery(id);
+    }
+    if (gallery.id && userId != gallery.user_id) {
+      window.location.replace("/");
+    }
+  }, [gallery.id]);
+
+  const handleGetGallery = async (id) => {
+    const data = await galleryService.get(id);
+    setGallery(data);
+  };
 
   const handleRemoveURL = (index) => {
     const { url } = gallery;
@@ -52,21 +65,23 @@ export const CreateGallery = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await galleryService.add(gallery);
+    await galleryService.edit(gallery.id, gallery);
     setGallery({ name: "", description: "", url: [""] });
-    window.location.replace("/my-galleries");
+    window.location.replace(`/galleries/${gallery.id}`);
   };
 
   return (
-    <CreateGalleryForm
-      gallery={gallery}
-      onChangeHandler={handleOnChange}
-      removeURLHandler={handleRemoveURL}
-      addURLHandler={handleAddURL}
-      submitHandler={handleSubmit}
-      URLChangeHandler={handleURLChange}
-      moveDownHandler={handleMoveDown}
-      moveUpHandler={handleMoveUp}
-    />
+    <div>
+      <CreateGalleryForm
+        gallery={gallery}
+        onChangeHandler={handleOnChange}
+        removeURLHandler={handleRemoveURL}
+        addURLHandler={handleAddURL}
+        submitHandler={handleSubmit}
+        URLChangeHandler={handleURLChange}
+        moveDownHandler={handleMoveDown}
+        moveUpHandler={handleMoveUp}
+      />
+    </div>
   );
 };

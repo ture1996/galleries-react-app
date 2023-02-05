@@ -4,7 +4,7 @@ import { setAllGalleries, setSingleGallery } from "./slice";
 
 function* getGalleries() {
   const response = yield call(galleryService.getAll);
-  yield put(setAllGalleries(response.data));
+  yield put(setAllGalleries(response));
 }
 
 function* getGallery({ payload }) {

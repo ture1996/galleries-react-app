@@ -15,3 +15,8 @@ code {
 ul#remove {
   list-style-type: none;
 }
+
+input:invalid ~ .errMsg::before {
+  content: '\2717';
+  color: red;
+}

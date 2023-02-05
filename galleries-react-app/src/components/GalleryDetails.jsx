@@ -7,11 +7,36 @@ export const GalleryDetails = ({
   comments,
   handleSelect,
   index,
+  userId,
+  handleDeleteComment,
+  handleDeleteGallery,
 }) => {
   return (
     <div>
-      <h1>{gallery.name}</h1>
-      <Link to={`authors/${user.id}`}>
+      <div style={{ display: "flex" }}>
+        <h1>{gallery.name}</h1>
+        {userId != null ? (
+          <p style={{ marginLeft: "auto" }}>
+            <button
+              type="button"
+              onClick={() => handleDeleteGallery(gallery.id)}
+            >
+              Delete
+            </button>{" "}
+            <button
+              type="button"
+              onClick={() =>
+                window.location.replace(`/edit-gallery/${gallery.id}`)
+              }
+            >
+              Edit
+            </button>
+          </p>
+        ) : (
+          ""
+        )}
+      </div>
+      <Link to={`/authors/${user.id}`}>
         {user.first_name} {user.last_name}
       </Link>
       <br />
@@ -21,7 +46,9 @@ export const GalleryDetails = ({
       <Carousel activeIndex={index} onSelect={handleSelect}>
         {gallery.url.map((url, key = 0) => (
           <Carousel.Item key={key++}>
-            <img className="d-block w-100" src={url} />
+            <a href={url} target="_blank">
+              <img className="d-block w-100" src={url} />
+            </a>
           </Carousel.Item>
         ))}
       </Carousel>
@@ -36,6 +63,16 @@ export const GalleryDetails = ({
               Posted by: {comment.user.first_name} {comment.user.last_name} at{" "}
               {comment.created_at}
             </h6>
+            {comment.user_id == userId ? (
+              <button
+                type="button"
+                onClick={() => handleDeleteComment(comment)}
+              >
+                Delete comment
+              </button>
+            ) : (
+              ""
+            )}
             <br />
           </li>
         ))}

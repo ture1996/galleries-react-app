@@ -5,6 +5,8 @@ export const CreateGalleryForm = ({
   addURLHandler,
   removeURLHandler,
   URLChangeHandler,
+  moveUpHandler,
+  moveDownHandler,
 }) => {
   return (
     <form onSubmit={submitHandler}>
@@ -22,7 +24,9 @@ export const CreateGalleryForm = ({
       <br />
       <label>Description</label>
       <br />
-      <input
+      <textarea
+        rows="11"
+        cols="100"
         maxLength={1000}
         type="text"
         value={gallery.description}
@@ -36,23 +40,53 @@ export const CreateGalleryForm = ({
         gallery.url.map((imageURL, index) => {
           return (
             <div key={index} className="box">
-              <input
-                name="url"
-                placeholder="Enter Image URL"
-                value={imageURL}
-                onChange={(e) => URLChangeHandler(e, index)}
-              />
-              <div className="btn-box">
-                {gallery.url.length !== 1 && (
-                  <button
-                    type="button"
-                    className="mr10"
-                    onClick={() => removeURLHandler(index)}
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
+              {index === 0 ? (
+                <input
+                  required
+                  name="url"
+                  type="url"
+                  pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)(.jpe?g|.png|.gif)"
+                  placeholder="Enter Image URL"
+                  value={imageURL}
+                  onChange={(e) => URLChangeHandler(e, index)}
+                />
+              ) : (
+                <input
+                  name="url"
+                  type="url"
+                  pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)(.jpe?g|.png|.gif)"
+                  placeholder="Enter Image URL"
+                  value={imageURL}
+                  onChange={(e) => URLChangeHandler(e, index)}
+                />
+              )}{" "}
+              {index != 0 && (
+                <button
+                  type="button"
+                  className="mr10"
+                  onClick={() => moveUpHandler(index)}
+                >
+                  Move Up
+                </button>
+              )}{" "}
+              {index != gallery.url.length - 1 && (
+                <button
+                  type="button"
+                  className="mr10"
+                  onClick={() => moveDownHandler(index)}
+                >
+                  Move Down
+                </button>
+              )}{" "}
+              {gallery.url.length !== 1 && (
+                <button
+                  type="button"
+                  className="mr10"
+                  onClick={() => removeURLHandler(index)}
+                >
+                  Remove
+                </button>
+              )}
             </div>
           );
         })}
@@ -61,7 +95,13 @@ export const CreateGalleryForm = ({
         Add another URL
       </button>
       <br />
-      <button type="submit">Submit</button>
+      <button type="submit">Submit</button>{" "}
+      <button
+        type="button"
+        onClick={() => window.location.replace("/my-galleries")}
+      >
+        Cancel
+      </button>
     </form>
   );
 };
